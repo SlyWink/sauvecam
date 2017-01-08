@@ -7,7 +7,7 @@ import os
 import time
 import sys
 import stat
-# Version modifiée comportant code 501 si collection existe (ano 4shared)
+# Version modifiée comportant codes 204 et 501 si collection existe (ano 4shared)
 sys.path.append('/home/pi/easywebdav-master_SL')
 import easywebdav
 import subprocess

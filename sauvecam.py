@@ -6,7 +6,7 @@ import glob
 import os
 import time
 import sys
-# Version modifiée comportant code 501 si collection existe (ano 4shared)
+# Version modifiée comportant codes 204 et 501 si collection existe (ano 4shared)
 #sys.path.append('/home/steph/easywebdav-master_SL')
 sys.path.append('/home/pi/easywebdav-master_SL')
 import easywebdav
