@@ -67,6 +67,9 @@ while TRUE:
           # Extrait le nom du répertoire destinataire
           repdist_j = datephot[0:8]
           repdist_h = datephot[8:10]
+          # Captures entre 00:00 et 06:59 dans le même répertoire
+          if int(repdist_h) < 7:
+            repdist_h = "00-06"
           repdist = repdist_j + '/' + repdist_h
           # On vérifie si le répertoire a été traité récemment
           if repdist <> courant:
