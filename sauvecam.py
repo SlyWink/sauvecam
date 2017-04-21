@@ -66,10 +66,15 @@ while TRUE:
           debug("Traitement " + photo)
           # Extrait le nom du répertoire destinataire
           repdist_j = datephot[0:8]
-          repdist_h = datephot[8:10]
-          # Captures entre 00:00 et 06:59 dans le même répertoire
-          if int(repdist_h) < 7:
-            repdist_h = "00-06"
+          heure = int(datephot[8:10])
+          repdist_h = ""
+          if heure < 6:
+            # Captures entre 00:00 et 05:59 dans le même répertoire
+            repdist_h = "00-05"
+          else:
+            # Captures h et h+1 (h paire) dans le même répertoire
+            hpaire = heure - heure % 2
+            repdist_h = "%02d-%02d" % (hpaire,hpaire+1)
           repdist = repdist_j + '/' + repdist_h
           # On vérifie si le répertoire a été traité récemment
           if repdist <> courant:
