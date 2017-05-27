@@ -11,6 +11,7 @@ import sys
 sys.path.append('/home/pi/easywebdav-master_SL')
 import easywebdav
 import subprocess
+import signal
 
 DEBUG = 1
 DISTANT = '/' + os.uname()[1].upper()
@@ -37,11 +38,15 @@ def dispo(path):
   stat = os.statvfs(path)
   return stat.f_bavail * stat.f_frsize 
 
+def handler(signum,frame):
+  print "** TIME OUT **"
+  raise easywebdav.WebdavException("Time out")
 
 # Paramétrage connexion webdav
 debug("Paramétrage connexion " + CLOUD)
 wd = easywebdav.connect(host=CLOUD,username=USERNAME,password=PASSWORD,protocol=PROTO)
 
+signal.signal(signal.SIGALRM,handler)
 while TRUE:
 
   try:
@@ -76,6 +81,8 @@ while TRUE:
             hpaire = heure - heure % 2
             repdist_h = "%02d-%02d" % (hpaire,hpaire+1)
           repdist = repdist_j + '/' + repdist_h
+          # 20 secondes maxi pour faire le transfert
+          signal.alarm(20)
           # On vérifie si le répertoire a été traité récemment
           if repdist <> courant:
             # Vérifie l'existence du répertoire jour
@@ -93,6 +100,8 @@ while TRUE:
           heure = time.time()
           wd.upload(path,DISTANT + '/' + repdist + '/' + photo)
           debug(" -> OK en %.2f s" % (time.time()-heure))
+          # Désactive l'alarme
+          signal.alarm(0)
         os.remove(path)
   except easywebdav.WebdavException,texterr:
     debug("Anomalie WebDAV\n{}".format(texterr))
