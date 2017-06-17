@@ -114,4 +114,4 @@ while TRUE:
   time.sleep(5)
   if derdate > 0 and time.time()-derdate > 3630:
     debug("Dernière photo antérieure à 1h05, redémarrage nécessaire")
-    #subprocess.call("sudo reboot", shell=True)
+    subprocess.call("/usr/bin/sudo /sbin/reboot", shell=True)
