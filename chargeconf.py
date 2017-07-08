@@ -24,6 +24,7 @@ def debug(msg):
     print time.strftime("%d/%m/%y-%H:%M:%S",time.localtime()) + " - " + msg
 
 
+time.sleep(5)
 # Paramétrage connexion webdav
 debug("Paramétrage connexion " + CLOUD)
 wd = easywebdav.connect(host=CLOUD,username=USERNAME,password=PASSWORD,protocol=PROTO)
