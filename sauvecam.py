@@ -16,6 +16,7 @@ import signal
 DEBUG = 1
 DISTANT = '/' + os.uname()[1].upper()
 CAPTURES = '/tmp/picam'
+MAXFICH = 1000
 
 execfile("/home/pi/cloudconf.py")
 
@@ -27,7 +28,7 @@ FALSE = 0
 courant = ''
 attente = 1
 derdate = 0
-
+cptphot = 0
 
 def debug(msg):
   if DEBUG:
@@ -81,6 +82,9 @@ while TRUE:
             hpaire = heure - heure % 2
             repdist_h = "%02d-%02d" % (hpaire,hpaire+1)
           repdist = repdist_j + '/' + repdist_h
+          if courant[0:-2] <> repdist:
+            cptphot = 0
+          repdist += ".%1d" % (cptphot / MAXFICH)
           # 20 secondes maxi pour faire le transfert
           signal.alarm(20)
           # On vérifie si le répertoire a été traité récemment
@@ -100,6 +104,7 @@ while TRUE:
           heure = time.time()
           wd.upload(path,DISTANT + '/' + repdist + '/' + photo)
           debug(" -> OK en %.2f s" % (time.time()-heure))
+          cptphot += 1
           # Désactive l'alarme
           signal.alarm(0)
         os.remove(path)
