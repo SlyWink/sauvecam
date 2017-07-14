@@ -25,9 +25,6 @@ def debug(msg):
 
 
 time.sleep(5)
-# Paramétrage connexion webdav
-debug("Paramétrage connexion " + CLOUD)
-wd = easywebdav.connect(host=CLOUD,username=USERNAME,password=PASSWORD,protocol=PROTO)
 
 SCRIPT_D = DISTANT + 'sauvecam.py'
 SCRIPT_L = LOCAL + 'sauvecam.py'
@@ -36,13 +33,26 @@ CONFIG_L = LOCAL + 'motion.conf'
 MASQUE_D = DISTANT + HOSTNAME + '_masque.pgm'
 MASQUE_L = LOCAL + 'masque.pgm'
 
-debug("Téléchargement " + SCRIPT_D + " en " + SCRIPT_L)
-wd.download(SCRIPT_D,SCRIPT_L)
-os.chmod(SCRIPT_L,stat.S_IRWXU|stat.S_IRGRP|stat.S_IXGRP|stat.S_IROTH|stat.S_IXOTH)
+while True:
 
-debug("Téléchargement " + CONFIG_D + " en " + CONFIG_L)
-wd.download(CONFIG_D,CONFIG_L)
+  try:
+    # Paramétrage connexion webdav
+    debug("Paramétrage connexion " + CLOUD)
+    wd = easywebdav.connect(host=CLOUD,username=USERNAME,password=PASSWORD,protocol=PROTO)
 
-if wd.exists(MASQUE_D):
-  debug("Téléchargement " + MASQUE_D + " en " + MASQUE_L)
-  wd.download(MASQUE_D,MASQUE_L)
+    debug("Téléchargement " + SCRIPT_D + " en " + SCRIPT_L)
+    wd.download(SCRIPT_D,SCRIPT_L)
+    os.chmod(SCRIPT_L,stat.S_IRWXU|stat.S_IRGRP|stat.S_IXGRP|stat.S_IROTH|stat.S_IXOTH)
+
+    debug("Téléchargement " + CONFIG_D + " en " + CONFIG_L)
+    wd.download(CONFIG_D,CONFIG_L)
+
+    if wd.exists(MASQUE_D):
+      debug("Téléchargement " + MASQUE_D + " en " + MASQUE_L)
+      wd.download(MASQUE_D,MASQUE_L)
+
+    break
+
+  except:
+    debug("Anomalie téléchargement, nouvel essai dans 30s")
+    time.sleep(30)
