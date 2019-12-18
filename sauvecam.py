@@ -12,6 +12,10 @@ sys.path.append('/home/pi/easywebdav-master_SL')
 import easywebdav
 import subprocess
 import signal
+import base64
+import smtplib
+from email.MIMEMultipart import MIMEMultipart
+from email.MIMEText import MIMEText
 
 DEBUG = 1
 DISTANT = '/' + os.uname()[1].upper()
@@ -34,6 +38,21 @@ def debug(msg):
   if DEBUG:
     print time.strftime("%d/%m/%y-%H:%M:%S",time.localtime()) + " - " + msg
 
+def mailInfo():
+  try:
+    msg = MIMEMultipart()
+    msg['From'] = FROM_ADDR
+    msg['To'] = TO_ADDR
+    msg['Subject'] = "Boot %s" % (os.uname()[1])
+    body = "Voir l'espace disponible sur 4shared"
+    msg.attach(MIMEText(body, 'plain'))
+    server = smtplib.SMTP_SSL(SMTP_SRV)
+    server.ehlo()
+    server.login(SMTP_ID, base64.decodestring(SMTP_PWD))
+    text = msg.as_string()
+    server.sendmail(FROM_ADDR, TO_ADDR, text)
+  except SMTPException:
+    pass
 
 def dispo(path):
   stat = os.statvfs(path)
@@ -43,9 +62,12 @@ def handler(signum,frame):
   print "** TIME OUT **"
   raise easywebdav.WebdavException("Time out")
 
+# Courriel d'avertissement
+mailInfo()
+
 # Paramétrage connexion webdav
 debug("Paramétrage connexion " + CLOUD)
-wd = easywebdav.connect(host=CLOUD,username=USERNAME,password=PASSWORD,protocol=PROTO)
+wd = easywebdav.connect(host=CLOUD,username=USERNAME,password=base64.decodestring(PASSWORD),protocol=PROTO)
 
 signal.signal(signal.SIGALRM,handler)
 while TRUE:

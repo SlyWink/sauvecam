@@ -11,6 +11,7 @@ import stat
 sys.path.append('/home/pi/easywebdav-master_SL')
 import easywebdav
 import subprocess
+import base64
 
 DEBUG = 1
 HOSTNAME = os.uname()[1].upper()
@@ -38,7 +39,7 @@ while True:
   try:
     # Paramétrage connexion webdav
     debug("Paramétrage connexion " + CLOUD)
-    wd = easywebdav.connect(host=CLOUD,username=USERNAME,password=PASSWORD,protocol=PROTO)
+    wd = easywebdav.connect(host=CLOUD,username=USERNAME,password=base64.decodestring(PASSWORD),protocol=PROTO)
 
     debug("Téléchargement " + SCRIPT_D + " en " + SCRIPT_L)
     wd.download(SCRIPT_D,SCRIPT_L)
