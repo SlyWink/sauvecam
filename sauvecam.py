@@ -127,13 +127,14 @@ while TRUE:
           wd.upload(path,DISTANT + '/' + repdist + '/' + photo)
           debug(" -> OK en %.2f s" % (time.time()-heure))
           cptphot += 1
-          # Désactive l'alarme
-          signal.alarm(0)
         os.remove(path)
   except easywebdav.WebdavException,texterr:
     debug("Anomalie WebDAV\n{}".format(texterr))
     courant = ''
     pass
+  finally:
+    # Désactive l'alarme
+    signal.alarm(0)
 
   if attente:
     debug("En attente de captures")
