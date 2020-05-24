@@ -51,7 +51,7 @@ def mailInfo():
     server.login(SMTP_ID, base64.decodestring(SMTP_PWD))
     text = msg.as_string()
     server.sendmail(FROM_ADDR, TO_ADDR, text)
-  except SMTPException:
+  except smtplib.SMTPException:
     pass
 
 def dispo(path):
