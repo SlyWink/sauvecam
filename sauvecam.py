@@ -48,7 +48,8 @@ def mailInfo():
     msg = MIMEMultipart()
     msg['From'] = FROM_ADDR
     msg['To'] = TO_ADDR
-    msg['Subject'] = "Pi %s : " % (os.uname()[1]) + "Reboot" if uptime()<5*60 else "Anomalie"
+    msg['Subject'] = "Pi %s : " % (os.uname()[1])
+    msg['Subject'] += "Reboot" if uptime()<5*60 else "Anomalie"
     body = "Voir ce qui se passe"
     msg.attach(MIMEText(body, 'plain'))
     server = smtplib.SMTP_SSL(SMTP_SRV)
