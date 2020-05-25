@@ -38,13 +38,18 @@ def debug(msg):
   if DEBUG:
     print time.strftime("%d/%m/%y-%H:%M:%S",time.localtime()) + " - " + msg
 
+def uptime():
+  with open('/proc/uptime', 'r') as f:
+      seconds = float(f.readline().split()[0])
+      return int(seconds)
+
 def mailInfo():
   try:
     msg = MIMEMultipart()
     msg['From'] = FROM_ADDR
     msg['To'] = TO_ADDR
-    msg['Subject'] = "Boot %s" % (os.uname()[1])
-    body = "Voir l'espace disponible sur 4shared"
+    msg['Subject'] = "Pi %s : " % (os.uname()[1]) + "Reboot" if uptime()<5*60 else "Anomalie"
+    body = "Voir ce qui se passe"
     msg.attach(MIMEText(body, 'plain'))
     server = smtplib.SMTP_SSL(SMTP_SRV)
     server.ehlo()
