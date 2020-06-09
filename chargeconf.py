@@ -5,6 +5,7 @@ import os
 import time
 import stat
 import requests
+import subprocess
 
 
 DEBUG = 1
@@ -19,8 +20,8 @@ SCRIPT_D = DISTANT + 'sauvecam.py'
 SCRIPT_L = LOCAL + 'sauvecam.py'
 CONFIG_D = DISTANT + HOSTNAME + '_motion.conf'
 CONFIG_L = LOCAL + 'motion.conf'
-MASQUE_D = DISTANT + HOSTNAME + '_masque.pgm'
-MASQUE_L = LOCAL + 'masque.pgm'
+MASQUE_D = DISTANT + HOSTNAME + '_masque.pgm.gz'
+MASQUE_L = LOCAL + 'masque.pgm.gz'
 
 
 def debug(msg):
@@ -28,7 +29,7 @@ def debug(msg):
     print time.strftime("%d/%m/%y-%H:%M:%S",time.localtime()) + " - " + msg
 
 
-def wget(inName,outName=''):
+def wget(inName, outName=''):
   r = requests.get(inName)
   if r.status_code == requests.codes.ok:
     open(outName , 'wb').write(r.content)
@@ -55,6 +56,7 @@ while essai < ESSAIS:
     debug("Téléchargement " + MASQUE_D + " en " + MASQUE_L)
     if wget(MASQUE_D,MASQUE_L):
       debug(MSG_OK)
+      subprocess.call(["/bin/gunzip",MASQUE_L])
 
     break
 
