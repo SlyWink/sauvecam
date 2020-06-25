@@ -166,6 +166,6 @@ while True:
     attente = False
   time.sleep(5)
   referenceTime = wd.lastTime if wd.lastTime > 0 else startTime
-  if time.time() - referenceTime > 3630 :
+  if time.time() - referenceTime > 3900 :
     debug("Dernière photo antérieure à 1h05, redémarrage nécessaire")
     subprocess.call("/usr/bin/sudo /sbin/reboot", shell=True)
