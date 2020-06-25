@@ -14,7 +14,7 @@ import smtplib
 from email.MIMEMultipart import MIMEMultipart
 from email.MIMEText import MIMEText
 
-DEBUG = 1
+DEBUG = True
 HOSTNAME = os.uname()[1].upper()
 CAPTURES = '/tmp/picam'
 MAXFICH = 1000
@@ -142,6 +142,7 @@ debug("Paramétrage connexion " + CLOUD)
 wd = MyWebdav(easywebdav.connect(host=CLOUD, username=USERNAME, password=base64.decodestring(PASSWORD), protocol=PROTO))
 
 attente = True
+startTime = time.time()
 while True:
 
   photos = glob.glob(CAPTURES + '/[0-9]*.jpg')
@@ -164,6 +165,7 @@ while True:
     debug("En attente de captures")
     attente = False
   time.sleep(5)
-  if wd.lastTime > 0 and time.time() - wd.lastTime > 3630:
+  referenceTime = wd.lastTime if wd.lastTime > 0 else startTime
+  if time.time() - referenceTime > 3630 :
     debug("Dernière photo antérieure à 1h05, redémarrage nécessaire")
     subprocess.call("/usr/bin/sudo /sbin/reboot", shell=True)
