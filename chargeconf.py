@@ -37,6 +37,10 @@ def wget(inName, outName=''):
   return False
 
 
+debug("Passage eth0 10baseT-FD")
+subprocess.call(["/usr/bin/sudo","/sbin/mii-tool","-A 10baseT-FD","eth0"])
+time.sleep(3)
+
 essai = 0
 
 while essai < ESSAIS:
@@ -56,7 +60,7 @@ while essai < ESSAIS:
     debug("Téléchargement " + MASQUE_D + " en " + MASQUE_L)
     if wget(MASQUE_D,MASQUE_L):
       debug(MSG_OK)
-      subprocess.call(["/bin/gunzip",MASQUE_L])
+      subprocess.call(["/bin/gunzip","-f",MASQUE_L])
 
     break
 
