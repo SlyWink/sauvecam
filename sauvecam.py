@@ -117,7 +117,13 @@ class MyWebdav:
       collectionPath += "/%s.%1d" % (collectionItems[1], self._fileCount / MAXFICH)
       if self._fileCount % MAXFICH == 0:
         debug("Création de la collection " + collectionPath)
-        self._wd.mkdir(collectionPath)
+        try:
+          self._wd.mkdir(collectionPath)
+        except easywebdav.WebdavException as error:
+          if error.actual_code == 409:
+            pass
+          else:
+            raise
       remotePath = collectionPath + "/" + fileName
       debug("Transfert %s => %s (%d)" % (filePath, remotePath,self._fileCount))
       startTime = time.time()
